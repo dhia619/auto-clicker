@@ -5,7 +5,7 @@ class AppGUI:
     def __init__(self):
         self.root = Tk()
         self.root.title("Auto Clicker")
-        
+
         #styles
         style = ttk.Style()
         style.configure("TLabel", font=("courier", 13))
@@ -90,3 +90,25 @@ class AppGUI:
 
         self.help_button = ttk.Button(self.root, text="Help")
         self.help_button.grid(row=4, column=0, padx=5, pady=5, sticky="ew")
+
+        # Center the window after it's displayed
+        self.root.update_idletasks()  # Update "requested size" from geometry manager
+        self.center_window()
+
+        self.root.mainloop()
+
+    def center_window(self):
+        # Get the width and height of the window
+        window_width = self.root.winfo_width()
+        window_height = self.root.winfo_height()
+        
+        # Get the width and height of the screen
+        monitor_width = self.root.winfo_screenwidth()
+        monitor_height = self.root.winfo_screenheight()
+
+        # Calculate x and y coordinates to center the window
+        x = (monitor_width // 2) - (window_width // 2)
+        y = (monitor_height // 2) - (window_height // 2)
+
+        # Set the geometry of the window to center it
+        self.root.geometry(f"{window_width}x{window_height}+{x}+{y}")
