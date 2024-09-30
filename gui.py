@@ -3,8 +3,8 @@ from tkinter import *
 
 class AppGUI:
     def __init__(self):
-        self.root = Tk()
-        self.root.title("Auto Clicker")
+        self.window = Tk()
+        self.window.title("Auto Clicker")
 
         #styles
         style = ttk.Style()
@@ -13,6 +13,22 @@ class AppGUI:
         style.configure("TEntry", font=("courier", 13))
         style.configure("TCombobox", font=("courier", 13))
         style.configure("TRadiobutton", font=("courier", 13))
+
+        
+        self.root = ttk.Frame(self.window)
+        self.root.grid(row=0,column=0,sticky="nswe")
+
+
+        # Add grid weights for dynamic resizing
+        self.window.grid_columnconfigure(0, weight=1)
+        self.window.grid_rowconfigure(0, weight=1)
+        self.root.grid_columnconfigure(0, weight=1)
+        self.root.grid_columnconfigure(1, weight=1)
+        self.root.grid_rowconfigure(0, weight=1)
+        self.root.grid_rowconfigure(1, weight=1)
+        self.root.grid_rowconfigure(2, weight=1)
+        self.root.grid_rowconfigure(3, weight=1)
+
 
         # Click Interval Group
         self.click_interval_frame = ttk.LabelFrame(self.root, text="Click Interval", padding=(10, 5))
@@ -40,7 +56,7 @@ class AppGUI:
 
         # Click Options Group
         self.click_options_frame = ttk.LabelFrame(self.root, text="Click Options", padding=(10, 5))
-        self.click_options_frame.grid(row=1, column=0, padx=10, pady=5, sticky="ew")
+        self.click_options_frame.grid(row=1, column=0, padx=10, pady=5, sticky="nsew")
 
         self.mouse_button_label = ttk.Label(self.click_options_frame, text="Mouse Button:")
         self.mouse_button_label.grid(row=0, column=0, pady=5, sticky="w")
@@ -55,7 +71,7 @@ class AppGUI:
         #Click repeat Group
         self.click_repeat_mode = IntVar()
         self.click_repeat_frame = ttk.LabelFrame(self.root, text="Click repeat")
-        self.click_repeat_frame.grid(row=1, column=1, padx=10, pady=5)
+        self.click_repeat_frame.grid(row=1, column=1, padx=10, pady=5, sticky="nsew")
         self.repeat_radio = ttk.Radiobutton(self.click_repeat_frame, text="Repeat", variable=self.click_repeat_mode, value=1)
         self.repeat_radio.grid(row=0, column=0, pady=5, sticky="w")
         self.num_clicks_entry = ttk.Entry(self.click_repeat_frame, width=10)
@@ -67,7 +83,7 @@ class AppGUI:
 
         # Cursor Position Group
         self.cursor_position_frame = ttk.LabelFrame(self.root, text="Cursor Position", padding=(10, 5))
-        self.cursor_position_frame.grid(row=2, column=0, columnspan=2, padx=10, pady=5, sticky="ew")
+        self.cursor_position_frame.grid(row=2, column=0, columnspan=2, padx=10, pady=5, sticky="nsew")
 
         self.pick_position_button = ttk.Button(self.cursor_position_frame, text="Pick Location")
         self.pick_position_button.grid(row=0, column=0)
@@ -82,14 +98,17 @@ class AppGUI:
         self.y_entry.grid(row=0, column=4, padx=5)
 
         # Buttons
-        self.start_button = ttk.Button(self.root, text="Start")
-        self.start_button.grid(row=3, column=0, padx=5, pady=5,sticky="ew")
+        self.buttons_frame = ttk.LabelFrame(self.root)
+        self.buttons_frame.grid(row=3,column=0, columnspan=2, padx=10, sticky="new")
 
-        self.stop_button = ttk.Button(self.root, text="Stop")
-        self.stop_button.grid(row=3, column=1, padx=5, pady=5,sticky="ew")
+        self.start_button = ttk.Button(self.buttons_frame, text="Start")
+        self.start_button.grid(row=0, column=0, padx=5, pady=5,sticky="nsew")
 
-        self.help_button = ttk.Button(self.root, text="Help")
-        self.help_button.grid(row=4, column=0, padx=5, pady=5, sticky="ew")
+        self.stop_button = ttk.Button(self.buttons_frame, text="Stop")
+        self.stop_button.grid(row=0, column=1, padx=5, pady=5,sticky="nsew")
+
+        self.help_button = ttk.Button(self.buttons_frame, text="Help")
+        self.help_button.grid(row=1, column=0, padx=5, pady=5, sticky="nsew")
 
         # Center the window after it's displayed
         self.root.update_idletasks()  # Update "requested size" from geometry manager
@@ -99,16 +118,16 @@ class AppGUI:
 
     def center_window(self):
         # Get the width and height of the window
-        window_width = self.root.winfo_width()
-        window_height = self.root.winfo_height()
+        window_width = self.window.winfo_width()
+        window_height = self.window.winfo_height()
         
         # Get the width and height of the screen
-        monitor_width = self.root.winfo_screenwidth()
-        monitor_height = self.root.winfo_screenheight()
+        monitor_width = self.window.winfo_screenwidth()
+        monitor_height = self.window.winfo_screenheight()
 
         # Calculate x and y coordinates to center the window
         x = (monitor_width // 2) - (window_width // 2)
         y = (monitor_height // 2) - (window_height // 2)
 
         # Set the geometry of the window to center it
-        self.root.geometry(f"{window_width}x{window_height}+{x}+{y}")
+        self.window.geometry(f"{window_width}x{window_height}+{x}+{y}")
