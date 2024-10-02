@@ -1,6 +1,6 @@
 from tkinter import ttk
 from tkinter import *
-
+from tkinter import messagebox
 class AppGUI:
     def __init__(self):
         self.window = Tk()
@@ -99,7 +99,7 @@ class AppGUI:
 
         # Buttons
         self.buttons_frame = ttk.LabelFrame(self.root)
-        self.buttons_frame.grid(row=3,column=0, columnspan=2, padx=10, sticky="new")
+        self.buttons_frame.grid(row=3,column=0, columnspan=2, padx=10, pady=10, sticky="ns")
 
         self.start_button = ttk.Button(self.buttons_frame, text="Start")
         self.start_button.grid(row=0, column=0, padx=5, pady=5,sticky="nsew")
@@ -111,10 +111,8 @@ class AppGUI:
         self.help_button.grid(row=1, column=0, padx=5, pady=5, sticky="nsew")
 
         # Center the window after it's displayed
-        self.root.update_idletasks()  # Update "requested size" from geometry manager
+        self.window.update_idletasks()  # Update "requested size" from geometry manager
         self.center_window()
-
-        self.root.mainloop()
 
     def center_window(self):
         # Get the width and height of the window
@@ -131,3 +129,60 @@ class AppGUI:
 
         # Set the geometry of the window to center it
         self.window.geometry(f"{window_width}x{window_height}+{x}+{y}")
+
+    def show_alert_message(self,alert_type,title,msg):
+        if alert_type == "error":
+            messagebox.showerror(title,msg)
+        elif alert_type == "warning":
+            messagebox.showwarning(title,msg)
+        elif alert_type == "success":
+            messagebox.showinfo(title,msg)
+
+    # Helper function to validate numeric input
+    def is_numeric(self, value, field_name):
+        if value.strip() == "":
+            self.show_alert_message("error", "Missing value", f"Please enter the number of {field_name}")
+            return False
+        elif not value.isnumeric():
+            self.show_alert_message("error", "Invalid value", f"{field_name.capitalize()} should only contain numbers")
+            return False
+        return True
+    
+    def is_valid(self, value, allowed_values, field_name):
+        if value.strip() == "":
+            self.show_alert_message("error", "Missing value", f"Please choose a {field_name}")
+            return False
+        elif value.lower() not in allowed_values:
+            self.show_alert_message("error", "Invalid value", f"{field_name.capitalize()} should be one of these {allowed_values}")
+            return False
+        return True
+
+    def time_interval_is_valid(self):
+        hours = self.hours_entry.get()
+        minutes = self.minutes_entry.get()
+        seconds = self.seconds_entry.get()
+        milliseconds = self.milliseconds_entry.get()
+
+        # Validate each input using helper function
+        return (self.is_numeric(hours, "hours") and
+                self.is_numeric(minutes, "minutes") and
+                self.is_numeric(seconds, "seconds") and
+                self.is_numeric(milliseconds, "milliseconds"))
+
+    def picked_location_is_valid(self):
+        x = self.x_entry.get()
+        y = self.y_entry.get()
+
+        if x.strip() == "" or y.strip() == "":
+            self.show_alert_message("error", "Missing value", "Please pick a location")
+            return False
+        elif not(x.isnumeric()) or not(y.isnumeric()):
+            self.show_alert_message("error", "Invalid value", "Location must be numeric")
+            return False
+        return True
+
+    def click_options_is_valid(self):
+        mouse_button = self.mouse_button_combo.get()
+        click_type = self.click_type_combo.get()
+        return (self.is_valid(mouse_button,("left","middle","right"),"mouse button")
+                and self.is_valid(click_type,("single","double"),"click type"))
